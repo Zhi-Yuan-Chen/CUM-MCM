@@ -1,0 +1,191 @@
+//高钾大量元素和主要元素的代码
+GET DATA 
+  /TYPE=XLSX 
+  /FILE='E:\2022国赛\高钾.xlsx' 
+  /SHEET=name 'Sheet1' 
+  /CELLRANGE=FULL 
+  /READNAMES=ON 
+  /DATATYPEMIN PERCENTAGE=95.0 
+  /HIDDEN IGNORE=YES. 
+EXECUTE. 
+DATASET NAME 数据集1 WINDOW=FRONT. 
+STATS CANCORR SET1=二氧化硅SiO2 氧化钾K2O   SET2=氧化钠Na2O 氧化铅PbO 氧化钡BaO 氧化锡SnO2 二氧化硫SO2 
+/OPTIONS  COMPUTECVARS=NO 
+/PRINT PAIRWISECORR=NO LOADINGS=YES VARPROP=YES COEFFICIENTS=YES.
+
+//高钾大量元素和微量元素的代码
+STATS CANCORR SET1=二氧化硅SiO2 氧化钾K2O   SET2=氧化钙CaO 氧化镁MgO 氧化铝Al2O3 氧化铁Fe2O3 氧化铜CuO 五氧化二磷P2O5 氧化锶SrO 
+/OPTIONS  COMPUTECVARS=NO 
+/PRINT PAIRWISECORR=NO LOADINGS=YES VARPROP=YES COEFFICIENTS=YES.
+
+//铅钡大量元素和主要元素的代码
+GET DATA 
+  /TYPE=XLSX 
+  /FILE='E:\2022国赛\铅钡.xlsx' 
+  /SHEET=name 'Sheet1' 
+  /CELLRANGE=FULL 
+  /READNAMES=ON 
+  /DATATYPEMIN PERCENTAGE=95.0 
+  /HIDDEN IGNORE=YES. 
+EXECUTE. 
+DATASET NAME 数据集1 WINDOW=FRONT. 
+STATS CANCORR SET1=二氧化硅SiO2 氧化铅PbO 氧化钡BaO   SET2=氧化钾K2O 氧化钙CaO 五氧化二磷P2O5 氧化锡SnO2 二氧化硫SO2 
+/OPTIONS  COMPUTECVARS=NO 
+/PRINT PAIRWISECORR=NO LOADINGS=YES VARPROP=YES COEFFICIENTS=YES.
+
+//铅钡大量元素和微量元素的代码
+STATS CANCORR SET1=二氧化硅SiO2 氧化铅PbO 氧化钡BaO   SET2=氧化钠Na2O 氧化镁MgO 氧化铝Al2O3 氧化铁Fe2O3 氧化铜CuO 氧化锶SrO 
+/OPTIONS  COMPUTECVARS=NO 
+/PRINT PAIRWISECORR=NO LOADINGS=YES VARPROP=YES COEFFICIENTS=YES.
+
+//高钾风化+预测画图
+* 图表构建器. 
+GGRAPH 
+  /GRAPHDATASET NAME="graphdataset" VARIABLES=二氧化硅SiO2 氧化铝Al2O3 氧化钾K2O 表面1 MISSING=LISTWISE 
+    REPORTMISSING=NO 
+  /GRAPHSPEC SOURCE=INLINE 
+  /FITLINE TOTAL=NO SUBGROUP=NO. 
+BEGIN GPL 
+  SOURCE: s=userSource(id("graphdataset")) 
+  DATA: 二氧化硅SiO2=col(source(s), name("二氧化硅SiO2")) 
+  DATA: 氧化铝Al2O3=col(source(s), name("氧化铝Al2O3")) 
+  DATA: 氧化钾K2O=col(source(s), name("氧化钾K2O")) 
+  DATA: 表面1=col(source(s), name("表面1"), unit.category()) 
+  COORD: rect(dim(1,2,3)) 
+  GUIDE: axis(dim(1), label("氧化钾(K2O)")) 
+  GUIDE: axis(dim(2), label("二氧化硅(SiO2)")) 
+  GUIDE: axis(dim(3), label("氧化铝(Al2O3)")) 
+  GUIDE: legend(aesthetic(aesthetic.color.interior), label("表面1")) 
+  GUIDE: text.title(label("组 3-D 散点图 /  氧化铝(Al2O3) 按 二氧化硅(SiO2) 按 氧化钾(K2O)...")) 
+  ELEMENT: point(position(氧化钾K2O*二氧化硅SiO2*氧化铝Al2O3), color.interior(表面1)) 
+END GPL.
+
+//高钾原先画图
+GET DATA 
+  /TYPE=XLSX 
+  /FILE='E:\2022国赛\高钾.xlsx' 
+  /SHEET=name 'Sheet1' 
+  /CELLRANGE=FULL 
+  /READNAMES=ON 
+  /DATATYPEMIN PERCENTAGE=95.0 
+  /HIDDEN IGNORE=YES. 
+EXECUTE. 
+DATASET NAME 数据集1 WINDOW=FRONT. 
+* 图表构建器. 
+GGRAPH 
+  /GRAPHDATASET NAME="graphdataset" VARIABLES=二氧化硅SiO2 氧化铝Al2O3 氧化钾K2O 表面1 MISSING=LISTWISE 
+    REPORTMISSING=NO 
+  /GRAPHSPEC SOURCE=INLINE 
+  /FITLINE TOTAL=NO SUBGROUP=NO. 
+BEGIN GPL 
+  SOURCE: s=userSource(id("graphdataset")) 
+  DATA: 二氧化硅SiO2=col(source(s), name("二氧化硅SiO2")) 
+  DATA: 氧化铝Al2O3=col(source(s), name("氧化铝Al2O3")) 
+  DATA: 氧化钾K2O=col(source(s), name("氧化钾K2O")) 
+  DATA: 表面1=col(source(s), name("表面1"), unit.category()) 
+  COORD: rect(dim(1,2,3)) 
+  GUIDE: axis(dim(1), label("氧化钾(K2O)")) 
+  GUIDE: axis(dim(2), label("二氧化硅(SiO2)")) 
+  GUIDE: axis(dim(3), label("氧化铝(Al2O3)")) 
+  GUIDE: legend(aesthetic(aesthetic.color.interior), label("表面1")) 
+  GUIDE: text.title(label("组 3-D 散点图 /  氧化铝(Al2O3) 按 二氧化硅(SiO2) 按 氧化钾(K2O)...")) 
+  ELEMENT: point(position(氧化钾K2O*二氧化硅SiO2*氧化铝Al2O3), color.interior(表面1)) 
+END GPL.
+
+
+//铅钡风化+预测画图
+GET DATA 
+  /TYPE=XLSX 
+  /FILE='E:\2022国赛\spss铅钡画图.xlsx' 
+  /SHEET=name 'Sheet1' 
+  /CELLRANGE=FULL 
+  /READNAMES=ON 
+  /DATATYPEMIN PERCENTAGE=95.0 
+  /HIDDEN IGNORE=YES. 
+EXECUTE. 
+DATASET NAME 数据集1 WINDOW=FRONT. 
+* 图表构建器. 
+GGRAPH 
+  /GRAPHDATASET NAME="graphdataset" VARIABLES=二氧化硅SiO2 氧化铅PbO 五氧化二磷P2O5 表面1 MISSING=LISTWISE 
+    REPORTMISSING=NO 
+  /GRAPHSPEC SOURCE=INLINE 
+  /FITLINE TOTAL=NO SUBGROUP=NO. 
+BEGIN GPL 
+  SOURCE: s=userSource(id("graphdataset")) 
+  DATA: 二氧化硅SiO2=col(source(s), name("二氧化硅SiO2")) 
+  DATA: 氧化铅PbO=col(source(s), name("氧化铅PbO")) 
+  DATA: 五氧化二磷P2O5=col(source(s), name("五氧化二磷P2O5")) 
+  DATA: 表面1=col(source(s), name("表面1"), unit.category()) 
+  COORD: rect(dim(1,2,3)) 
+  GUIDE: axis(dim(1), label("五氧化二磷(P2O5)")) 
+  GUIDE: axis(dim(2), label("二氧化硅(SiO2)")) 
+  GUIDE: axis(dim(3), label("氧化铅(PbO)")) 
+  GUIDE: legend(aesthetic(aesthetic.color.interior), label("表面1")) 
+  GUIDE: text.title(label("组 3-D 散点图 /  氧化铅(PbO) 按 二氧化硅(SiO2) 按 五氧化二磷(P2O5)...")) 
+  ELEMENT: point(position(五氧化二磷P2O5*二氧化硅SiO2*氧化铅PbO), color.interior(表面1)) 
+END GPL.
+
+//铅钡原先画图
+GET DATA 
+  /TYPE=XLSX 
+  /FILE='E:\2022国赛\铅钡.xlsx' 
+  /SHEET=name 'Sheet1' 
+  /CELLRANGE=FULL 
+  /READNAMES=ON 
+  /DATATYPEMIN PERCENTAGE=95.0 
+  /HIDDEN IGNORE=YES. 
+EXECUTE. 
+DATASET NAME 数据集1 WINDOW=FRONT. 
+* 图表构建器. 
+GGRAPH 
+  /GRAPHDATASET NAME="graphdataset" VARIABLES=二氧化硅SiO2 氧化铅PbO 五氧化二磷P2O5 表面1 MISSING=LISTWISE 
+    REPORTMISSING=NO 
+  /GRAPHSPEC SOURCE=INLINE 
+  /FITLINE TOTAL=NO SUBGROUP=NO. 
+BEGIN GPL 
+  SOURCE: s=userSource(id("graphdataset")) 
+  DATA: 二氧化硅SiO2=col(source(s), name("二氧化硅SiO2")) 
+  DATA: 氧化铅PbO=col(source(s), name("氧化铅PbO")) 
+  DATA: 五氧化二磷P2O5=col(source(s), name("五氧化二磷P2O5")) 
+  DATA: 表面1=col(source(s), name("表面1"), unit.category()) 
+  COORD: rect(dim(1,2,3)) 
+  GUIDE: axis(dim(1), label("五氧化二磷(P2O5)")) 
+  GUIDE: axis(dim(2), label("二氧化硅(SiO2)")) 
+  GUIDE: axis(dim(3), label("氧化铅(PbO)")) 
+  GUIDE: legend(aesthetic(aesthetic.color.interior), label("表面1")) 
+  GUIDE: text.title(label("组 3-D 散点图 /  氧化铅(PbO) 按 二氧化硅(SiO2) 按 五氧化二磷(P2O5)...")) 
+  ELEMENT: point(position(五氧化二磷P2O5*二氧化硅SiO2*氧化铅PbO), color.interior(表面1)) 
+END GPL.
+
+\\高钾玻璃二分类logistics
+GET DATA 
+  /TYPE=XLSX 
+  /FILE='E:\2022国赛\高钾.xlsx' 
+  /SHEET=name 'Sheet1' 
+  /CELLRANGE=FULL 
+  /READNAMES=ON 
+  /DATATYPEMIN PERCENTAGE=95.0 
+  /HIDDEN IGNORE=YES. 
+EXECUTE. 
+DATASET NAME 数据集2 WINDOW=FRONT. 
+LOGISTIC REGRESSION VARIABLES 表面1 
+  /METHOD=ENTER 二氧化硅SiO2 氧化铝Al2O3 氧化钾K2O 
+  /SAVE=PRED PGROUP 
+  /CRITERIA=PIN(.05) POUT(.10) ITERATE(20) CUT(.5).
+
+
+\\铅钡玻璃二分类logistics
+GET DATA 
+  /TYPE=XLSX 
+  /FILE='E:\2022国赛\铅钡.xlsx' 
+  /SHEET=name 'Sheet1' 
+  /CELLRANGE=FULL 
+  /READNAMES=ON 
+  /DATATYPEMIN PERCENTAGE=95.0 
+  /HIDDEN IGNORE=YES. 
+EXECUTE. 
+DATASET NAME 数据集1 WINDOW=FRONT. 
+LOGISTIC REGRESSION VARIABLES 表面1 
+  /METHOD=ENTER 二氧化硅SiO2 氧化钙CaO 氧化铅PbO 氧化钠Na2O 五氧化二磷P2O5 
+  /SAVE=PRED PGROUP 
+  /CRITERIA=PIN(.05) POUT(.10) ITERATE(20) CUT(.5).
